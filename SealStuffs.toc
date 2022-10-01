@@ -1,0 +1,9 @@
+## Interface: 30400
+## Title: Seal stuffs
+## Notes: Bar with seals.
+## Author: Celheandra (heavily inspired by Vampyr78 PortalMage-addon)
+## Version: 1.8-wotlk
+## SavedVariablesPerCharacter: sealStuffsFrameX, sealStuffsFrameY, sealStuffsSpells, sealStuffsVertical, sealStuffsScale
+## OptionalDeps: Masque
+embeds.xml
+SealStuffs.lua

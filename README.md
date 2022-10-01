@@ -1,0 +1,1 @@
+Just put the folder in your ...\World of Warcraft\_classic_\Interface\AddOns\ folder. Enjoy.
