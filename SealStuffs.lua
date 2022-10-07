@@ -23,6 +23,13 @@ SealStuffs.icons = {["sealOfRighteousness"] = "Interface/ICONS/Ability_thunderbo
 					["sealofWisdom"] = "Interface/ICONS/spell_holy_righteousnessaura",
 					["sealofCommand"] = "Interface/ICONS/ability_warrior_innerrage"}
 
+SealStuffs.names = {["sealOfRighteousness"] = "Seal of Righteousness",
+					["sealofVengeance"] = "Seal of Vengeance",
+					["sealofJustice"] = "Seal of Justice",
+					["sealofLight"] = "Seal of Light",
+					["sealofWisdom"] = "Seal of Wisdom",
+					["sealofCommand"] = "Seal of Command"}
+
 function SealStuffs:OnInitialize()
 	_, self.class = UnitClass("player")
 	self.faction = UnitFactionGroup("player")
@@ -347,41 +354,6 @@ function SealStuffs:SetupButtonsVertical(frame, move)
 	collectgarbage("collect")
 end
 
-function SealStuffs:SetupButtonsHorizontal(frame, move)
-	self:ClearButtons()
-	local length = 0
-	if sealStuffsSpells["sealOfRighteousness"] then
-		self.button1, length = self:SetupButtonHorizontal("sealStuffsButton1", self.button1, length, "sealOfRighteousness", 121, frame, SealStuffs.icons["sealOfRighteousness"])
-	end
-	if sealStuffsSpells["sealofJustice"] then
-		self.button2, length = self:SetupButtonHorizontal("sealStuffsButton2", self.button2, length, "sealofJustice", 122, frame, SealStuffs.icons["sealofJustice"])
-	end
-	if sealStuffsSpells["sealofVengeance"] then
-		self.button1, length = self:SetupButtonHorizontal("sealStuffsButton3", self.button3, length, "sealofVengeance", 123, frame, SealStuffs.icons["sealofVengeance"])
-	end
-	if sealStuffsSpells["sealofLight"] then
-		self.button2, length = self:SetupButtonHorizontal("sealStuffsButton4", self.button4, length, "sealofLight", 124, frame, SealStuffs.icons["sealofLight"])
-	end
-	if sealStuffsSpells["sealofWisdom"] then
-		self.button3, length = self:SetupButtonHorizontal("sealStuffsButton5", self.button5, length, "sealofWisdom", 125, frame, SealStuffs.icons["sealofWisdom"])
-	end
-	if sealStuffsSpells["sealofCommand"] then
-		self.button3, length = self:SetupButtonHorizontal("sealStuffsButton6", self.button6, length, "sealofCommand", 126, frame, SealStuffs.icons["sealofCommand"])
-	end
-	frame:SetWidth(length)
-	move:SetWidth(length)
-	frame:SetHeight(40)
-	move:SetHeight(40)
-	frame.seals:ClearAllPoints()
-	collectgarbage("collect")
-end
-
-function SealStuffs.buttonOnUpdate(self)
-	if Masque ~= nil then
-		group:ReSkin()
-	end
-end
-
 function SealStuffs:SetupButtonVertical(name, button, y, index, id, frame, icon)
 	if button == nil then
 		button = CreateFrame("CHECKBUTTON", name, frame, BackdropTemplateMixin and "BackdropTemplate, SecureActionButtonTemplate, ActionBarButtonTemplate")
@@ -403,6 +375,14 @@ function SealStuffs:SetupButtonVertical(name, button, y, index, id, frame, icon)
 	button:SetScript("OnLeave", function(self) 
 					 GameTooltip:Hide()
 					end)
+	button:RegisterUnitEvent("UNIT_AURA", "player")
+	button:SetScript("OnEvent", function()
+		if AuraUtil.FindAuraByName(SealStuffs.names[index], "player") then
+			ActionButton_ShowOverlayGlow(button)
+		else
+			ActionButton_HideOverlayGlow(button)
+		end
+	end)
 	button:SetBackdrop({bgFile = icon,
 					   tile = false,
 					   insets = {left = 0,
@@ -410,6 +390,41 @@ function SealStuffs:SetupButtonVertical(name, button, y, index, id, frame, icon)
 								 top = 0,
 								 bottom = 0}})
 	return button, y - 40
+end
+
+function SealStuffs:SetupButtonsHorizontal(frame, move)
+	self:ClearButtons()
+	local length = 0
+	if sealStuffsSpells["sealOfRighteousness"] then
+		self.button1, length = self:SetupButtonHorizontal("sealStuffsButton1", self.button1, length, "sealOfRighteousness", 121, frame, SealStuffs.icons["sealOfRighteousness"])
+	end
+	if sealStuffsSpells["sealofJustice"] then
+		self.button2, length = self:SetupButtonHorizontal("sealStuffsButton2", self.button2, length, "sealofJustice", 122, frame, SealStuffs.icons["sealofJustice"])
+	end
+	if sealStuffsSpells["sealofVengeance"] then
+		self.button3, length = self:SetupButtonHorizontal("sealStuffsButton3", self.button3, length, "sealofVengeance", 123, frame, SealStuffs.icons["sealofVengeance"])
+	end
+	if sealStuffsSpells["sealofLight"] then
+		self.button4, length = self:SetupButtonHorizontal("sealStuffsButton4", self.button4, length, "sealofLight", 124, frame, SealStuffs.icons["sealofLight"])
+	end
+	if sealStuffsSpells["sealofWisdom"] then
+		self.button5, length = self:SetupButtonHorizontal("sealStuffsButton5", self.button5, length, "sealofWisdom", 125, frame, SealStuffs.icons["sealofWisdom"])
+	end
+	if sealStuffsSpells["sealofCommand"] then
+		self.button6, length = self:SetupButtonHorizontal("sealStuffsButton6", self.button6, length, "sealofCommand", 126, frame, SealStuffs.icons["sealofCommand"])
+	end
+	frame:SetWidth(length)
+	move:SetWidth(length)
+	frame:SetHeight(40)
+	move:SetHeight(40)
+	frame.seals:ClearAllPoints()
+	collectgarbage("collect")
+end
+
+function SealStuffs.buttonOnUpdate(self)
+	if Masque ~= nil then
+		group:ReSkin()
+	end
 end
 
 function SealStuffs:SetupButtonHorizontal(name, button, x, index, id, frame, icon)
@@ -432,6 +447,14 @@ function SealStuffs:SetupButtonHorizontal(name, button, x, index, id, frame, ico
 	button:SetScript("OnLeave", function(self) 
 					 GameTooltip:Hide()
 					end)
+	button:RegisterUnitEvent("UNIT_AURA", "player")
+	button:SetScript("OnEvent", function()
+		if AuraUtil.FindAuraByName(SealStuffs.names[index], "player") then
+			ActionButton_ShowOverlayGlow(button)
+		else
+			ActionButton_HideOverlayGlow(button)
+		end
+	end)
 	button:SetBackdrop({bgFile = icon,
 					   tile = false,
 					   insets = {left = 0,
